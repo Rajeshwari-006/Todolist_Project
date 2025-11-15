@@ -1,1 +1,2 @@
 # Todolist_Project
+This project is a simple and efficient To-Do List application built using HTML, CSS, and JavaScript. It allows users to add, edit, delete, and mark tasks as completed with a clean and user-friendly interface. All tasks are saved automatically using LocalStorage, ensuring they remain even after the browser is closed. This project demonstrates core concepts like DOM manipulation, event handling, and persistent data storage.
