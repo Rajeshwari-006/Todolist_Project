@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple To-Do List App</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 30px;
+        }
+
+        .container {
+            width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        #taskInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin-top: 10px;
+            width: 100%;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056c2;
+        }
+
+        ul {
+            margin-top: 20px;
+            padding: 0;
+            list-style: none;
+        }
+
+        li {
+            background: #eee;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .done {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .delete-btn {
+            background: red;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>To-Do List App</h2>
+
+        <input type="text" id="taskInput" placeholder="Enter a new task">
+        <button onclick="addTask()">Add Task</button>
+
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        // Load tasks when page opens
+        window.onload = function() {
+            loadTasks();
+        }
+
+        // Add a new task
+        function addTask() {
+            let taskText = document.getElementById("taskInput").value;
+
+            if (taskText === "") {
+                alert("Please enter a task!");
+                return;
+            }
+
+            let tasks = getTasksFromStorage();
+            tasks.push({ text: taskText, completed: false });
+            saveTasks(tasks);
+
+            document.getElementById("taskInput").value = "";
+            loadTasks();
+        }
+
+        // Display tasks on the screen
+        function loadTasks() {
+            let tasks = getTasksFromStorage();
+            let list = document.getElementById("taskList");
+
+            list.innerHTML = ""; // clear old list
+
+            tasks.forEach((task, index) => {
+                let li = document.createElement("li");
+
+                let span = document.createElement("span");
+                span.innerText = task.text;
+
+                if (task.completed) {
+                    span.classList.add("done");
+                }
+
+                span.onclick = function() {
+                    toggleTask(index);
+                }
+
+                let del = document.createElement("button");
+                del.innerText = "Delete";
+                del.classList.add("delete-btn");
+                del.onclick = function() {
+                    deleteTask(index);
+                }
+
+                li.appendChild(span);
+                li.appendChild(del);
+
+                list.appendChild(li);
+            });
+        }
+
+        // Mark a task as completed / incomplete
+        function toggleTask(index) {
+            let tasks = getTasksFromStorage();
+            tasks[index].completed = !tasks[index].completed;
+            saveTasks(tasks);
+            loadTasks();
+        }
+
+        // Delete a task
+        function deleteTask(index) {
+            let tasks = getTasksFromStorage();
+            tasks.splice(index, 1);
+            saveTasks(tasks);
+            loadTasks();
+        }
+
+        // --- Local Storage Helpers ---
+        function getTasksFromStorage() {
+            let tasks = localStorage.getItem("todo_tasks");
+            return tasks ? JSON.parse(tasks) : [];
+        }
+
+        function saveTasks(tasks) {
+            localStorage.setItem("todo_tasks", JSON.stringify(tasks));
+        }
+    </script>
+
+</body>
+</html>
+  
